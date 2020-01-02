@@ -30,6 +30,8 @@ pcode = strtok(pt_line, "\n\t\r");
 if (pcode != NULL && pcode[0] != "#")
 {
 get_function(pcode, &stack, nbre_line)
+free(pt_line)
+fclose(open_File)
 }
 }
 return (1);
