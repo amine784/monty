@@ -1,38 +1,48 @@
 #include "monty.h"
 /**
-* main-main programm to interprete bytecode
-*@argc:int type argc is the  number of argc
-*@argv:char type
+* main-the main function
+*@argv: char type
+*@argc: number of args
 *Return: Always success
 **/
 int main(int argc, char *argv[])
 {
 FILE *open_File;
-unsigned int nbre_line = 1;
-char *pt_line = NULL;
+stack_t *stack = NULL, *head = NULL;
+char *pt_line = NULL, *pcd, *token;
 size_t buffer = 0;
-char *pcode;
-stack_t *stack = NULL;
-if ((argc < 2) || (argc > 2))
+unsigned int nbre_line = 1, x;
+if (argc != 2)
 {
-printf("USAGE: monty file\n");
+fprintf(stderr, "USAGE: monty file\n");
 exit(EXIT_FAILURE);
 }
 open_File = fopen(argv[1], "r");
 if (open_File == NULL)
 {
-printf("Error: Can't open file %s\n", argv[1]);
+fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 exit(EXIT_FAILURE);
 }
 for (; getline(&pt_line, &buffer, open_File) != -1; nbre_line++)
 {
-pcode = strtok(pt_line, "\n\t\r");
-if (pcode != NULL && pcode[0] != '#')
+pcd = strtok(pt_line, "\n\t\r ");
+if ((pcd == NULL || pcd[0] == '#') || (strcmp(pcd, "nop") == 0))
+continue;
+else if (strcmp(pcd, "push") == 0)
 {
-get_function(pcode, &stack, nbre_line);
-free(pt_line);
+token = strtok(NULL, "\n\t\r ");
+push(&stack, token, nbre_line);
+}
+else
+fn_helper(&stack, pcd, nbre_line);
+}
+for (x = 0; stack != NULL; x++)
+{
+head = stack;
+stack = stack->next;
+free(head);
+}
 fclose(open_File);
-}
-}
-return (1);
+free(pt_line);
+exit(EXIT_SUCCESS);
 }
