@@ -31,7 +31,7 @@ continue;
 else if (strcmp(pcd, "push") == 0)
 {
 token = strtok(NULL, "\n\t\r ");
-get_fp(&stack, token, nbre_line);
+push(&stack, token, nbre_line);
 }
 else
 fn_helper(&stack, pcd, nbre_line);
